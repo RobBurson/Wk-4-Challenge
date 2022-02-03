@@ -4,6 +4,7 @@ var submit = document.getElementById('submit');
 var time = document.querySelector('time');
 var start = document.getElementById('start');
 var container = document.querySelector(".container")
+var points = 0;
 
 var timer = 30;
 var timerTick;
@@ -22,33 +23,38 @@ function timerStart() {
 }
 
 
-function createQuiz(questions, container, quiz, score, submit){
+function createQuiz(questions, quiz, score, submit, timer){
 
-    function generateQuestions(questions, quiz){
+    var pageSize = 1;
+    var skip = 0;
+    
+
+    function generateQuestions(questions, quiz, skip, take){
         //code here
         var output = [];
         var answers;
+        var q = questions.slice(skip, skip + take);
 
         //for each question
-        for(var i=0; i < quizQuestions.length; i++){
+        for(var i=0; i < q.length; i++){
             //reset the list of answers
             answers = [];
 
             //for each answer to given question
-            for(letter in questions[i].answers){
+            for(letter in q[i].answers){
                 // add html radio button
                 answers.push(
                     '<label>'
                     + '<input type = "radio" name = "question'+i+'" value="'+letter+'">'
                     + letter + ': '
-                    + questions[i].answers[letter]
+                    + q[i].answers[letter]
                 + '</label>'
                 );
             }
 
             // add given question and its answers
             output.push(
-                '<div class="question">' + questions[i].question + '</div>'
+                '<div class="question">' + q[i].question + '</div>'
                     + '<div class="answers">' + answers.join('') + '</div>'
             );
         
@@ -59,47 +65,71 @@ function createQuiz(questions, container, quiz, score, submit){
     }
 
     function generateScore(questions, quiz, score){
-        //code here
+        // //code here
 
-        // gather answers
-        var scoreContainers = quiz.querySelectorAll('.answers');
+        // // gather answers
+        // var scoreContainers = quiz.querySelectorAll('.answers');
 
-        // track user answers
-        var userSubmission = '';
-        var correct = 0;
+        // // track user answers
+        // var userSubmission = '';
+        // var correct = 0;
 
-        // for each question
-        for(var i=0; i < questions.length; i++){
+        // // for each question
+        // for(var i=0; i < questions.length; i++){
 
-            // find answer user selected
-            userSubmission = (scoreContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
+        //     // find answer user selected
+        //     userSubmission = (scoreContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
 
-            // if correct
-            if(userSubmission===questions[i].correctAnswer){
-                // add to correct answers
-                correct++;
+        //     // if correct
+        //     if(userSubmission===questions[i].correctAnswer){
+        //         // add to correct answers
+        //         correct++;
 
-                // color correct answers blue
-                scoreContainers[i].style.color = 'lightblue';
-            }
+        //         // color correct answers blue
+        //         scoreContainers[i].style.color = 'lightblue';
+        //     }
 
-            // if answer was incorrect/blank
+        //     // if answer was incorrect/blank
 
-            else{
-                // color answers grey
+        //     else{
+        //         // color answers grey
                 
-                scoreContainers[i].style.color = 'grey';
-            }
-        }
+        //         scoreContainers[i].style.color = 'grey';
+        //     }
+        // }
 
         // show number of correct answers out of total answers
-        score.innerHTML = correct + ' out of ' + questions.length;
+        score.innerHTML = points + ' out of ' + questions.length;
     }
 
-    generateQuestions(questions,quiz, container);
+    function gradeQuestions(questions, start, count) {
+        for(var i = start; i < start + count && i < questions.length; i++) {
+            var question = questions[i];
+            var answer = (document.querySelector(`input[name="question${i-start}"]:checked`)||{}).value
+            
+
+            if(answer === question.correctAnswer) {
+                points++;
+            }
+        }
+    }
+
+    function progressQuiz() {
+        skip += pageSize;
+        if(skip < questions.length) {
+            generateQuestions(questions, quiz, skip, pageSize);
+        } else {
+            generateScore(questions, quiz, score);
+        }
+    }
+
+    generateQuestions(questions, quiz, skip, pageSize);
 
     submit.onclick = function(){
-        generateScore(questions, quiz, score);
+        if(skip < questions.length){
+            gradeQuestions(questions, skip, pageSize);
+        } 
+        progressQuiz();
     }
 
     // start.onclick = function()
