@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Week 4 Challenge: Web APIs Coding Quiz</title>
+</head>
+<body>    
+     <header>
+            <h1>Coding Quiz</h1>
+        </header>   
+    <div class="container" id="quiz">        
+        <div id="time">Time: 0</div>
+    </div>
+    <div class="btn-cont">  
+        <button id="start">Start Quiz</button>
+        <button id="submit">Get Your Score</button>
+        <!-- <div class="paginate">
+            <a href="#">Main</a>
+        </div> -->
+    </div>
+    <div id="score"></div>
+    <div class="last">
+        <h1 class="hsl">High Score List</h1>
+        <div class="score-input">
+            <input type="text" readonly class="form-control-plaintext" id="email" value="1."/>
+        </div>
+        <div class="btn-cont">
+            <button id="reset" class="btn" onclick="init()">Start Over</button>
+            <button id="clear" class="btn" onclick="clear()">Clear Score List</button>
+        </div>
+    </div>
+    <script src="./assets/js/index.js"></script>
+</body>
+</html>
